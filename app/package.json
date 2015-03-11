@@ -1,0 +1,14 @@
+{
+  "name": "Teammatch",
+  "version": "1.0.0",
+  "description": "Teammate finding app for hackathons",
+  "main": "teammatch.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Hamed Nilforoshan",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.12.2"
+  }
+}
