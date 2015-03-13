@@ -36,9 +36,13 @@ switch(app.get('env')) {
 		throw new Error("unknown exec env");
 };
 
-
 var User = require('./models/user.js');
 
+var auth = require('./lib/auth.js')(app, {
+	providers: credentials.providers,
+	successRedirect: '/account',
+	failureRedirect: '/unauthorized'
+});
 
-
-
+auth.init();
+auth.registerRoutes();
