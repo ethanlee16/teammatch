@@ -6,11 +6,8 @@ var mongoose = require('mongoose');
 var app = express();
 app.set('port',process.env.PORT || 3000);
 
-app.use(function(req, res) {
-	res.type('text/plain');
-	res.status(404);
-	res.send('404 - Not Found');
-});
+app.use(require('cookie-parser')(credentials.cookieSecret));
+app.use(require('express-session')();
 
 app.listen(app.get('port'), function () {
 	console.log('Press Control + C to stop!');
@@ -46,3 +43,15 @@ var auth = require('./lib/auth.js')(app, {
 
 auth.init();
 auth.registerRoutes();
+
+
+app.get('/account', function(req,res) {
+	if(!req.session.passport.user)
+		res.send('Unauthorized');
+	res.send('Authorized!!! :)');
+})
+app.use(function(req, res) {
+	res.type('text/plain');
+	res.status(404);
+	res.send('404 - Not Found');
+});

@@ -6,6 +6,15 @@ module.exports = {
 		production: {
 			connectionString: 'your_connect;'
 		}
+	},
+
+	providers: {
+		facebook: {
+			development: {
+				appId: '328164610723232',
+				appSecret: '0fe3629aaf838e5e5e5dbab6f34aac94'
+			}
+		}
 	}
 
 };
