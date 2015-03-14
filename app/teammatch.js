@@ -6,8 +6,10 @@ var mongoose = require('mongoose');
 var app = express();
 app.set('port',process.env.PORT || 3000);
 
-app.use(require('cookie-parser')(credentials.cookieSecret));
-app.use(require('express-session')();
+
+var MongoSessionStore = require('session-mongoose')(require('connect'));
+var sessionStore = new MongoSessionStore({ url: credentials.mongo.development.connectionString });
+
 
 app.listen(app.get('port'), function () {
 	console.log('Press Control + C to stop!');
@@ -48,7 +50,8 @@ auth.registerRoutes();
 app.get('/account', function(req,res) {
 	if(!req.session.passport.user)
 		res.send('Unauthorized');
-	res.send('Authorized!!! :)');
+	else
+		res.send('Authorized!!! :)');
 })
 app.use(function(req, res) {
 	res.type('text/plain');

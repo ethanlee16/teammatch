@@ -1,4 +1,7 @@
 module.exports = {
+	cookieSecret: 'suchsecretmuchunkown',
+
+	
 	mongo: {
 		development: {
 			connectionString: 'mongodb://hamedn:onjecton@ds031647.mongolab.com:31647/teammatch_dev'

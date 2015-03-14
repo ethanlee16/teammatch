@@ -1,5 +1,6 @@
 var User = require('../models/user.js'),
 	passport = require('passport'),
+	credentials = require('../credentials.js');
 	FacebookStrategy = require('passport-facebook').Strategy;
 
 passport.serializeUser(function(user, done) {
@@ -25,6 +26,11 @@ module.exports = function(app, options) {
 		init: function() {
 			var env = app.get('env');
 			var config = options.providers;
+
+			app.use(require('cookie-parser')(credentials.cookieSecret));
+			app.use(require('express-session')({secret:'suchsecretmuchunknown'}));
+			app.use(passport.initialize());
+			app.use(passport.session());
 
 			passport.use(new FacebookStrategy({
 				clientID: config.facebook[env].appId,
@@ -55,17 +61,17 @@ module.exports = function(app, options) {
 
 		},
 		registerRoutes: function() {
-			app.get('/auth/facebook', function(req,res,next) {
+			//Simplified Solution
+			app.get('/auth/facebook',
+			function(req,res,next) {
 				passport.authenticate('facebook', {
 					callbackURL: '/auth/facebook/callback?redirect=' + encodeURIComponent(req.query.redirect)
 				})(req,res,next);
 			});
 
+
 			app.get('/auth/facebook/callback', passport.authenticate('facebook',
-			{failureRedirect: options.failureRedirect},
-			function (req, res) {
-				res.redirect(303, req.query.redirect || options.successRedirect);
-			}));
+			{failureRedirect: options.failureRedirect, successRedirect: options.successRedirect}));
 
 
 
