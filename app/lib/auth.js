@@ -35,7 +35,7 @@ module.exports = function(app, options) {
 			passport.use(new FacebookStrategy({
 				clientID: config.facebook[env].appId,
 				clientSecret: config.facebook[env].appSecret,
-				callbackURL: 'http://localhost:3000/auth/facebook/callback',
+				callbackURL: config.facebook[env].callBackURL,
 			},
 			function (accessToken, refreshToken, profile, done) {
 				var authId = 'facebook' + profile.id;
@@ -61,17 +61,27 @@ module.exports = function(app, options) {
 
 		},
 		registerRoutes: function() {
+			var env = app.get('env');
+			var config = options.providers;
+
+
+
+
 			//Simplified Solution
 			app.get('/auth/facebook',
-		  passport.authenticate('facebook'),
-		  function(req, res){
-		    // The request will be redirected to Facebook for authentication, so this
-		    // function will not be called.
-		  });
+				passport.authenticate('facebook', {
+					callbackURL: config.facebook[env].callBackURL
+				}),
+				function (req,res) {
 
+				});
 
-			app.get('/auth/facebook/callback', passport.authenticate('facebook',
-			{failureRedirect: options.failureRedirect, successRedirect: options.successRedirect}));
+				app.get('/auth/facebook/callback',
+						passport.authenticate('facebook', { failureRedirect: options.failureRedirect }),
+						function(req, res) {
+							res.redirect(303, req.query.redirect || options.successRedirect);
+					});
+
 
 
 
