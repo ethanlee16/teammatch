@@ -46,13 +46,28 @@ auth.registerRoutes();
 
 
 
+//Session & security middle-ware
+app.use(require('csurf')());
+app.use(function(req, res, next){
+	res.locals._csrfToken = req.csrfToken();
+
+	res.locals.loggedIn = true;
+	if(!req.session.passport.user)
+		res.locals.loggedIn = false;
+	else
+		res.locals.loggedIn = true;
+
+	next();
+});
+
+
 
 //Routing
-app.get('/account', function(req,res) {
+app.get('/account/profile', function(req,res) {
 	if(!req.session.passport.user)
-		res.send('Unauthorized');
+		res.redirect('/');
 	else
-		res.send('Authorized!!! :)');
+		res.render('profile');
 })
 app.get('/', function(req,res) {
 	res.render('index');

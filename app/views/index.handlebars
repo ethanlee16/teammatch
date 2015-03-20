@@ -1,1 +1,13 @@
 <h1>Homepage</h1>
+<p>Teammatch is a free platform for people to find teammates at hackathons. Just fill out
+  a simple form and get matched with lots of people who want to work with you</p>
+
+{{#if loggedIn}}
+  <p>Authorized!</p>
+  <a href="/account/profile">Click here to fill out your profile</a>
+
+{{else}}
+ <p>Not Authorized!</p>
+ <a href="/auth/facebook">Click here to sign in with facebook</a>
+
+{{/if}}
