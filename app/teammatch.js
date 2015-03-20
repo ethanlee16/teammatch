@@ -1,7 +1,23 @@
 var express = require('express');
 var credentials = require('./credentials.js');
 var mongoose = require('mongoose');
-var handlebars = require('express3-handlebars').create({defaultLayout:'main'});
+var handlebars = require('express3-handlebars')
+	.create({
+		defaultLayout:'main',
+		helpers: {
+			section: function(name,options) {
+				if (!this._sections) {
+                    this._sections = {};
+        }
+        this._sections[name] = options.fn(this);
+                return null;
+			},
+			static: function(name) {
+            return require('./lib/static.js').map(name);
+      }
+		}
+
+	});
 
 
 var app = express();
@@ -44,6 +60,8 @@ var auth = require('./lib/auth.js')(app, {
 auth.init();
 auth.registerRoutes();
 
+app.use(express.static(__dirname + '/public'));
+app.use(require('body-parser')());
 
 
 //Session & security middle-ware
