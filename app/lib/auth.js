@@ -15,6 +15,7 @@ passport.deserializeUser(function(id, done){
 });
 
 module.exports = function(app, options) {
+//fallback redirect pages
 	if (!options.successRedirect) {
 		options.successRedirect = '/account';
 	}

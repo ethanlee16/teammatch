@@ -54,20 +54,31 @@ var sessionStore = new MongoSessionStore({ url: credentials.mongo.development.co
 var User = require('./models/user.js');
 var auth = require('./lib/auth.js')(app, {
 	providers: credentials.providers,
-	successRedirect: '/account',
+	successRedirect: '/',
 	failureRedirect: '/unauthorized'
 });
 auth.init();
 auth.registerRoutes();
 
 app.use(express.static(__dirname + '/public'));
-app.use(require('body-parser')());
+
+
+var bodyParser = require('body-parser');
+var csrf = require('csurf');
+var cookieParser = require('cookie-parser');
+
+var csrfProtection = csrf({cookie:true});
+var parseForm = bodyParser.urlencoded({ extended: false })
 
 
 //Session & security middle-ware
-app.use(require('csurf')());
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cookieParser())
+app.use(csrf({ cookie: true }))
+
+
 app.use(function(req, res, next){
-	res.locals._csrfToken = req.csrfToken();
+	res.cookie('XSRF-TOKEN', req.csrfToken());
 
 	res.locals.loggedIn = true;
 	if(!req.session.passport.user)
@@ -79,13 +90,25 @@ app.use(function(req, res, next){
 });
 
 
+//Form handeling
+app.post('/process', function(req, res) {
+	console.log('Succesfully received data');
+
+	if (req.xhr || req.accepts('json','html') == 'json') {
+		res.send({success:true});
+	}
+	else {
+		res.redirect(303,'/error-page');
+	}
+})
+
 
 //Routing
 app.get('/account/profile', function(req,res) {
 	if(!req.session.passport.user)
 		res.redirect('/');
 	else
-		res.render('profile');
+		res.render('profile',{csrf:req.csrfToken()});
 })
 app.get('/', function(req,res) {
 	res.render('index');
