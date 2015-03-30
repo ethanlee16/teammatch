@@ -74,12 +74,10 @@ var parseForm = bodyParser.urlencoded({ extended: false })
 //Session & security middle-ware
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
-app.use(csrf({ cookie: true }))
+app.use(csrfProtection)
 
 
 app.use(function(req, res, next){
-	res.cookie('XSRF-TOKEN', req.csrfToken());
-
 	res.locals.loggedIn = true;
 	if(!req.session.passport.user)
 		res.locals.loggedIn = false;
