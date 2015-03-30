@@ -63,16 +63,19 @@ auth.registerRoutes();
 app.use(express.static(__dirname + '/public'));
 
 
-var bodyParser = require('body-parser');
-var csrf = require('csurf');
+
+
 var cookieParser = require('cookie-parser');
+var csrf = require('csurf');
+var bodyParser = require('body-parser');
 
 var csrfProtection = csrf({cookie:true});
 var parseForm = bodyParser.urlencoded({ extended: false })
 
 
+
 //Session & security middle-ware
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(parseForm)
 app.use(cookieParser())
 app.use(csrfProtection)
 
@@ -90,10 +93,11 @@ app.use(function(req, res, next){
 
 //Form handeling
 app.post('/process', function(req, res) {
-	console.log('Succesfully received data');
 
 	if (req.xhr || req.accepts('json','html') == 'json') {
 		res.send({success:true});
+		console.log('Succesfully received data');
+
 	}
 	else {
 		res.redirect(303,'/error-page');
