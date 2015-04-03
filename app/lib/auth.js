@@ -29,7 +29,7 @@ module.exports = function(app, options) {
 			var config = options.providers;
 
 			app.use(require('cookie-parser')(credentials.cookieSecret));
-			app.use(require('express-session')({secret:'suchsecretmuchunknown'}));
+			app.use(require('express-session')({secret:credentials.cookieSecret, store:options.sessionStor }));
 			app.use(passport.initialize());
 			app.use(passport.session());
 

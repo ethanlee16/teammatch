@@ -55,7 +55,8 @@ var User = require('./models/user.js');
 var auth = require('./lib/auth.js')(app, {
 	providers: credentials.providers,
 	successRedirect: '/',
-	failureRedirect: '/unauthorized'
+	failureRedirect: '/unauthorized',
+	sessionStor: sessionStore
 });
 auth.init();
 auth.registerRoutes();
@@ -65,7 +66,6 @@ app.use(express.static(__dirname + '/public'));
 
 
 
-var cookieParser = require('cookie-parser');
 var csrf = require('csurf');
 var bodyParser = require('body-parser');
 
@@ -76,7 +76,6 @@ var parseForm = bodyParser.urlencoded({ extended: false })
 
 //Session & security middle-ware
 app.use(parseForm)
-app.use(cookieParser())
 app.use(csrfProtection)
 
 
@@ -109,8 +108,9 @@ app.post('/process', function(req, res) {
 app.get('/account/profile', function(req,res) {
 	if(!req.session.passport.user)
 		res.redirect('/');
-	else
-		res.render('profile',{csrf:req.csrfToken()});
+	else {
+		res.render('profile',{csrf:req.csrfToken(), userID: req.user.authId});
+	}
 })
 app.get('/', function(req,res) {
 	res.render('index');
