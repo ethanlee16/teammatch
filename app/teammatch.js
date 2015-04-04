@@ -109,7 +109,7 @@ app.get('/account/profile', function(req,res) {
 	if(!req.session.passport.user)
 		res.redirect('/');
 	else {
-		res.render('profile',{csrf:req.csrfToken(), userID: req.user.authId});
+		res.render('profile',{csrf:req.csrfToken(), authId: req.user.authId, displayName: req.user.name, mail: req.user.email});
 	}
 })
 app.get('/', function(req,res) {

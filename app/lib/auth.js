@@ -48,6 +48,7 @@ module.exports = function(app, options) {
 					user = new User({
 						authId: authId,
 						name: profile.displayName,
+						email: profile.emails[0].value,
 						created: Date.now()
 					});
 					user.save(function(err) {
@@ -71,7 +72,7 @@ module.exports = function(app, options) {
 			//Simplified Solution
 			app.get('/auth/facebook',
 				passport.authenticate('facebook', {
-					callbackURL: config.facebook[env].callBackURL
+					callbackURL: config.facebook[env].callBackURL, scope: [ 'email' ]
 				}),
 				function (req,res) {
 
