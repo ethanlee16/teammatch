@@ -94,8 +94,21 @@ app.use(function(req, res, next){
 app.post('/process', function(req, res) {
 
 	if (req.xhr || req.accepts('json','html') == 'json') {
+		User.findOneAndUpdate(
+			{authId:req.body.userID},
+			{ $set: {name:req.body.name,email:req.body.email}},
+			{},
+			function (err,user) {
+				if (err) {
+			    console.log('got an error');
+			  }
+			}
+		);
+
 		res.send({success:true});
-		console.log('Succesfully received data');
+		console.log(req.body);
+
+
 
 	}
 	else {
