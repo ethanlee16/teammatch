@@ -49,6 +49,8 @@ module.exports = function(app, options) {
 						authId: authId,
 						name: profile.displayName,
 						email: profile.emails[0].value,
+						userType:'',
+						skills:'',
 						created: Date.now()
 					});
 					user.save(function(err) {

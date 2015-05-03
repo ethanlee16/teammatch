@@ -96,7 +96,7 @@ app.post('/process', function(req, res) {
 	if (req.xhr || req.accepts('json','html') == 'json') {
 		User.findOneAndUpdate(
 			{authId:req.body.userID},
-			{ $set: {name:req.body.name,email:req.body.email, userType:req.body.userType}},
+			{ $set: {name:req.body.name,email:req.body.email, userType:req.body.userType, skills:req.body.skills}},
 			{},
 			function (err,user) {
 				if (err) {
@@ -122,7 +122,7 @@ app.get('/account/profile', function(req,res) {
 	if(!req.session.passport.user)
 		res.redirect('/');
 	else {
-		res.render('profile',{csrf:req.csrfToken(), authId: req.user.authId, displayName: req.user.name, mail: req.user.email, userType: req.user.userType});
+		res.render('profile',{csrf:req.csrfToken(), authId: req.user.authId, displayName: req.user.name, mail: req.user.email, userType: req.user.userType, skills:req.user.skills});
 	}
 })
 app.get('/', function(req,res) {
