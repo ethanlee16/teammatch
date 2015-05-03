@@ -13,7 +13,7 @@ var userSchema = new Schema({
 	username: String,
 	password: String,
 	userType:String, //Hacker | Hustler | Designer
-	skills: [String], //Node.js, Javascript, Rails, etc. (autocomplete on this)
+	skills: String, //Node.js, Javascript, Rails, etc. (autocomplete on this)
 	porfolio: [portfolioItem], //properties: name, description, image
 	awards: [String], //ex: Codeday 1st Place, MHacks Twilio Prize Winner
 	links: [String], //things like link to personal website, github page
